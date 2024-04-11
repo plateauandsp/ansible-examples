@@ -1,0 +1,12 @@
+- name: Check disk space
+  hosts: all
+  tasks:
+    - name: Gather disk space usage
+      disk_usage:
+      register: disk_space
+ 
+    - name: Show disk space
+      debug:
+        msg: "{{ item.path }} has {{ item.used_percent }}% space used"
+      with_items: "{{ disk_space.ansible_facts.disks }}"
+      when: item.used_percent > 80  # 仅显示使用率超过80%的磁盘
