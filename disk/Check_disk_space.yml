@@ -1,5 +1,6 @@
 ---
 - name: diskspace_mornitor
+  hosts: OSM
   tasks:
   - name: check diskspace
     shell: "df -hP|awk 'NR>1 && int($5) > 30'"
