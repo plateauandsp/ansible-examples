@@ -1,11 +1,5 @@
 ---
 - name: diskspace_mornitor
-  hosts: local
-  user: root
-  gather_facts: no
-  vars:
-   path: /home/devops
-
   tasks:
   - name: check diskspace
     shell: "df -hP|awk 'NR>1 && int($5) > 30'"
