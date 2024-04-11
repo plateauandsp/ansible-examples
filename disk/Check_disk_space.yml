@@ -1,14 +1,7 @@
 ---
-- name: Check Disk Space
-  hosts: all
+- name: diskspace_mornitor
   tasks:
-    - name: Gather disk space information
-      ansible.builtin.disk_usage:
-      register: disk_info
- 
-    - name: Print disk space information
-      ansible.builtin.debug:
-        msg: "{{ item.item }}"
-      loop: "{{ disk_info.ansible_facts.disk_usage }}"
-      loop_control:
-        label: "{{ item.device }}"
+  - name: check diskspace
+    shell: "df -hP|awk 'NR>1 && int($5) > 30'"
+    register: check_out
+  - debug: msg="disk space {{check_out.stdout}}"
