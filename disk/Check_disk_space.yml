@@ -1,7 +1,24 @@
 ---
-- name: diskspace_mornitor
+- name: Check Memory
+  hosts: all
+  gather_facts: no
   tasks:
-  - name: check diskspace
-    shell: "df -hP|awk 'NR>1 && int($5) > 30'"
-    register: check_out
-  - debug: msg="disk space {{check_out.stdout}}"
+    - name: Get memory info
+      setup:
+        gather_subset:
+          - memory
+ 
+    - name: Fail if memory is below a certain threshold
+      fail:
+        msg: "Memory is below 2GB"
+      when: ansible_memtotal_mb < 2048
+ 
+    - name: Notify if memory is above a certain threshold
+      notify:
+        - Memory is above 2GB
+      when: ansible_memtotal_mb >= 2048
+ 
+  handlers:
+    - name: Memory is above 2GB
+      debug:
+        msg: "Memory is {{ ansible_memtotal_mb }} MB"
